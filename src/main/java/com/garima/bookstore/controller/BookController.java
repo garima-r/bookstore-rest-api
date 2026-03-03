@@ -1,5 +1,6 @@
 package com.garima.bookstore.controller;
 
+import com.garima.bookstore.api.PagedResponse;
 import com.garima.bookstore.dto.BookDTO;
 import com.garima.bookstore.service.BookService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class BookController {
 
     //GET ALL BOOKS
     @GetMapping
-    public Page<BookDTO> getAllBooks(
+    public PagedResponse<BookDTO> getAllBooks(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size,
         @RequestParam(defaultValue = "id") String sortBy,

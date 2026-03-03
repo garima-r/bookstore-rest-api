@@ -1,5 +1,6 @@
 package com.garima.bookstore.service;
 
+import com.garima.bookstore.api.PagedResponse;
 import com.garima.bookstore.dto.BookDTO;
 import com.garima.bookstore.entity.Book;
 import com.garima.bookstore.exception.ResourceNotFoundException;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 @Service
 public class BookService {
@@ -33,13 +36,24 @@ public class BookService {
         return convertToDTO(savedBook);
     }
 
-    public Page<BookDTO> getAllBooks(int page, int size, String sortBy, String direction){
+    public PagedResponse<BookDTO> getAllBooks(int page, int size, String sortBy, String direction){
         Sort sort = direction.equalsIgnoreCase("desc")
                     ? Sort.by(sortBy).descending()
                     : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Book> bookPage = bookRepository.findAll(pageable);
-        return bookPage.map(this::convertToDTO);
+
+        List<BookDTO> dtoList = bookPage.map(this::convertToDTO).getContent();
+
+
+        return new PagedResponse<>(
+            dtoList,
+            bookPage.getNumber(),
+            bookPage.getSize(),
+            bookPage.getTotalElements(),
+            bookPage.getTotalPages(),
+            bookPage.isLast()
+        );
     }
 
     //Read One
