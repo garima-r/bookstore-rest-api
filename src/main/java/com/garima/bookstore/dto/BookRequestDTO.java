@@ -5,21 +5,22 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class BookDTO {
+public class BookRequestDTO {
     @NotBlank(message = "Title cannot be empty")
     @Size(min = 2, max =100, message = "Title must be between 2 and 100 characters")
     private String title;
 
     @NotBlank(message = "Author cannot be empty")
+    @Size(min=2, max=100, message="Author must be between 2 and 100 characters")
     private String author;
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be greater than 0")
     private Double price;
 
-    public BookDTO(){}
+    public BookRequestDTO(){}
 
-    public BookDTO(String title, String author, Double price){
+    public BookRequestDTO(String title, String author, Double price){
         this.title = title;
         this.author = author;
         this.price = price;

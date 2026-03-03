@@ -1,12 +1,13 @@
 package com.garima.bookstore.controller;
 
 import com.garima.bookstore.api.PagedResponse;
-import com.garima.bookstore.dto.BookDTO;
+import com.garima.bookstore.dto.BookRequestDTO;
+import com.garima.bookstore.dto.BookResponseDTO;
 import com.garima.bookstore.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
+
 
 @RestController
 @RequestMapping("/books")
@@ -21,13 +22,13 @@ public class BookController {
     //CREATE BOOK
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDTO createBook(@Valid @RequestBody BookDTO bookDTO){
+    public BookResponseDTO createBook(@Valid @RequestBody BookRequestDTO bookDTO){
         return bookService.createBook(bookDTO);
     }
 
     //GET ALL BOOKS
     @GetMapping
-    public PagedResponse<BookDTO> getAllBooks(
+    public PagedResponse<BookResponseDTO> getAllBooks(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size,
         @RequestParam(defaultValue = "id") String sortBy,
@@ -38,7 +39,7 @@ public class BookController {
 
     //GET BOOK BY ID
     @GetMapping("/{id}")
-    public BookDTO getBookById(@PathVariable Long id){
+    public BookResponseDTO getBookById(@PathVariable Long id){
         return bookService.getBookById(id);
     }
     
@@ -51,7 +52,7 @@ public class BookController {
 
     //UPDATE BOOK
     @PutMapping("/{id}")
-    public BookDTO updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO){
+    public BookResponseDTO updateBook(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookDTO){
         return bookService.updateBook(id, bookDTO);
     }
 }

@@ -1,7 +1,8 @@
 package com.garima.bookstore.service;
 
 import com.garima.bookstore.api.PagedResponse;
-import com.garima.bookstore.dto.BookDTO;
+import com.garima.bookstore.dto.BookRequestDTO;
+import com.garima.bookstore.dto.BookResponseDTO;
 import com.garima.bookstore.entity.Book;
 import com.garima.bookstore.exception.ResourceNotFoundException;
 import com.garima.bookstore.repository.BookRepository;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
 import java.util.List;
 
 @Service
@@ -24,7 +24,7 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public BookDTO createBook(BookDTO bookDTO){
+    public BookResponseDTO createBook(BookRequestDTO bookDTO){
         log.info("Creating new book with title: {}", bookDTO.getTitle());
 
         Book book = new Book();
@@ -33,17 +33,17 @@ public class BookService {
         book.setPrice(bookDTO.getPrice());
 
         Book savedBook = bookRepository.save(book);
-        return convertToDTO(savedBook);
+        return convertToResponseDTO(savedBook);
     }
 
-    public PagedResponse<BookDTO> getAllBooks(int page, int size, String sortBy, String direction){
+    public PagedResponse<BookResponseDTO> getAllBooks(int page, int size, String sortBy, String direction){
         Sort sort = direction.equalsIgnoreCase("desc")
                     ? Sort.by(sortBy).descending()
                     : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Book> bookPage = bookRepository.findAll(pageable);
 
-        List<BookDTO> dtoList = bookPage.map(this::convertToDTO).getContent();
+        List<BookResponseDTO> dtoList = bookPage.map(this::convertToResponseDTO).getContent();
 
 
         return new PagedResponse<>(
@@ -57,10 +57,10 @@ public class BookService {
     }
 
     //Read One
-    public BookDTO getBookById(Long id){
+    public BookResponseDTO getBookById(Long id){
         Book book = bookRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Book not found"));
-        return convertToDTO(book);        
+        return convertToResponseDTO(book);        
     }
 
     //Delete
@@ -72,7 +72,7 @@ public class BookService {
     }
 
     //Update
-    public BookDTO updateBook(Long id, BookDTO updatedBookDTO){
+    public BookResponseDTO updateBook(Long id, BookRequestDTO updatedBookDTO){
         Book existingBook = bookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
         
@@ -82,11 +82,12 @@ public class BookService {
 
         Book savedBook = bookRepository.save(existingBook);
 
-        return convertToDTO(savedBook);
+        return convertToResponseDTO(savedBook);
     }
 
-    private BookDTO convertToDTO(Book book){
-        return new BookDTO(
+    private BookResponseDTO convertToResponseDTO(Book book){
+        return new BookResponseDTO(
+            book.getId(),
             book.getTitle(),
             book.getAuthor(),
             book.getPrice()
