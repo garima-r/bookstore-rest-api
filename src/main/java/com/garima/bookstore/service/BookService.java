@@ -1,6 +1,7 @@
 package com.garima.bookstore.service;
 
 import com.garima.bookstore.api.PagedResponse;
+import com.garima.bookstore.dto.BookPatchDTO;
 import com.garima.bookstore.dto.BookRequestDTO;
 import com.garima.bookstore.dto.BookResponseDTO;
 import com.garima.bookstore.entity.Book;
@@ -83,6 +84,26 @@ public class BookService {
         Book savedBook = bookRepository.save(existingBook);
 
         return convertToResponseDTO(savedBook);
+    }
+
+    //Partial Update
+    public BookResponseDTO patchBook(Long id, BookPatchDTO patchDTO){
+        Book existingBook = bookRepository.findById(id)
+                            .orElseThrow(()-> new ResourceNotFoundException("Book not found"));
+        if(patchDTO.getTitle()!= null){
+            existingBook.setTitle(patchDTO.getTitle());
+        }
+
+        if(patchDTO.getAuthor() != null){
+            existingBook.setAuthor(patchDTO.getAuthor());
+        }
+
+        if(patchDTO.getPrice()!=null){
+            existingBook.setPrice(patchDTO.getPrice());
+        }
+
+        Book updateBook = bookRepository.save(existingBook);
+        return convertToResponseDTO(updateBook);
     }
 
     private BookResponseDTO convertToResponseDTO(Book book){

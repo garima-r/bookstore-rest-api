@@ -6,8 +6,6 @@ public class BookResponseDTO {
     private String author;
     private Double price;
 
-    public BookResponseDTO(){}
-
     public BookResponseDTO(Long id, String title, String author, Double price){
         this.id = id;
         this.title = title;

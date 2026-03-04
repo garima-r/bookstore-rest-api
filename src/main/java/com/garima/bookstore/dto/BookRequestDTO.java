@@ -20,12 +20,6 @@ public class BookRequestDTO {
 
     public BookRequestDTO(){}
 
-    public BookRequestDTO(String title, String author, Double price){
-        this.title = title;
-        this.author = author;
-        this.price = price;
-    }
-
     //Getters
     public String getTitle(){
         return title;

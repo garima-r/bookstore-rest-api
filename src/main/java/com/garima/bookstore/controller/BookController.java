@@ -1,6 +1,7 @@
 package com.garima.bookstore.controller;
 
 import com.garima.bookstore.api.PagedResponse;
+import com.garima.bookstore.dto.BookPatchDTO;
 import com.garima.bookstore.dto.BookRequestDTO;
 import com.garima.bookstore.dto.BookResponseDTO;
 import com.garima.bookstore.service.BookService;
@@ -54,5 +55,11 @@ public class BookController {
     @PutMapping("/{id}")
     public BookResponseDTO updateBook(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookDTO){
         return bookService.updateBook(id, bookDTO);
+    }
+
+    //PARTIAL UPDATE
+    @PatchMapping("/{id}")
+    public BookResponseDTO patchBook(@PathVariable Long id, @Valid @RequestBody BookPatchDTO patchDTO){
+        return bookService.patchBook(id, patchDTO);
     }
 }
